@@ -36,12 +36,7 @@
         var _mouse;
 
         function init(){
-        	//Increase Puzzle Difficulty by 1 each time
-        	// if (PUZZLE_DIFFICULTY === 0) {
-        	// 	PUZZLE_DIFFICULTY = 2;
-        	// } else {
-        		PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY +1;
-        	// }
+        		PUZZLE_DIFFICULTY +=1;
 
           _img = new Image();
           _img.addEventListener('load',onImage,false);
