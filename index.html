@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<!--<style>
+		canvas {
+			width: 100%;
+			height: auto;
+		}
+	</style>-->
+    <title>Gamify Art: The Puzzle</title>
     <script>
+    // To do: 
+    // - Make the pieces random sizes.
+    // - Make sure you can put any image on it.
+    // - Testing
+    // - gh-pages
+    // - Tablet + mobile (responsive??)
 
-        const PUZZLE_DIFFICULTY = 3;
+
+        var PUZZLE_DIFFICULTY = 1;
         const PUZZLE_HOVER_TINT = '#009900';
 
         var _stage;
@@ -17,14 +31,22 @@
         var _pieceWidth;
         var _pieceHeight;
         var _currentPiece;
-        var _currentDropPiece;  
+        var _currentDropPiece;
 
         var _mouse;
 
         function init(){
-            _img = new Image();
-            _img.addEventListener('load',onImage,false);
-            _img.src = "./img/full.jpg";
+        	//Increase Puzzle Difficulty by 1 each time
+        	// if (PUZZLE_DIFFICULTY === 0) {
+        	// 	PUZZLE_DIFFICULTY = 2;
+        	// } else {
+        		PUZZLE_DIFFICULTY = PUZZLE_DIFFICULTY +1;
+        	// }
+
+          _img = new Image();
+          _img.addEventListener('load',onImage,false);
+          //Eventually have function with random pictures to pick from
+          _img.src = "./img/full.jpg";
         }
         function onImage(e){
             _pieceWidth = Math.floor(_img.width / PUZZLE_DIFFICULTY)
@@ -191,6 +213,7 @@
             var gameWin = true;
             var i;
             var piece;
+
             for(i = 0;i < _pieces.length;i++){
                 piece = _pieces[i];
                 _stage.drawImage(_img, piece.sx, piece.sy, _pieceWidth, _pieceHeight, piece.xPos, piece.yPos, _pieceWidth, _pieceHeight);
@@ -207,7 +230,7 @@
             document.onmousedown = null;
             document.onmousemove = null;
             document.onmouseup = null;
-            initPuzzle();
+            init();
         }
         function shuffleArray(o){
             for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
@@ -217,7 +240,8 @@
     </script>
 </head>
 
-<body onload="init();">
+<body class="col-lg-4 col-lg-offset-4 col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1" onload="init();">
+	<br><br>
     <canvas id="canvas"></canvas>
 </body>
 
