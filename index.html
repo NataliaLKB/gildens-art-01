@@ -43,16 +43,13 @@
         function init (){
         	difficulty +=1;
             levelCounter +=1;
-            console.log("you are at level" + levelCounter);
-            //resets movesCounter between levels
-            movesCounter = 0;
 
             img = new Image();
             img.addEventListener('load',onImage,false);
           
             img.src = pickImg();
         }
-
+        //Need to finish...
         function pickImg (){
             return "./img/full.jpg";
         }
@@ -73,19 +70,60 @@
             canvas.height = puzzleHeight;
             canvas.style.border = "1px solid black";
         }
+
         function initPuzzle (){
             pieces = [];
             mouse = {x:0,y:0};
             currentPiece = null;
             currentDropPiece = null;
             stage.drawImage(img, 0, 0, puzzleWidth, puzzleHeight, 0, 0, puzzleWidth, puzzleHeight);
-            createTitle("Click to Start Puzzle");
+            if (levelCounter === 1) {
+                createTitle("Click to Start");
+            } else {
+                levelMessage(levelCounter - 1);
+                movesMessage(movesCounter);
+                createMessage("Ready for the Next Puzzle?");
+                createTitle("Click to Start");
+            }
             buildPieces();
+            //resets movesCounter between levels
+            movesCounter = 0;
         }
+
+        function levelMessage (level){
+            stage.fillStyle = "#000000";
+            stage.globalAlpha = .4;
+            stage.fillRect(50, 50 ,puzzleWidth - 100, puzzleHeight - 200);
+            stage.fillStyle = "#FFFFFF";
+            stage.globalAlpha = 1;
+            stage.textAlign = "center";
+            stage.textBaseline = "middle";
+            stage.font = "20px Arial";
+            stage.fillText("Congratulations you finished Level " + level, puzzleWidth / 2, 150);
+        }
+
+        function movesMessage (moves){
+            stage.fillStyle = "#FFFFFF";
+            stage.globalAlpha = 1;
+            stage.textAlign = "center";
+            stage.textBaseline = "middle";
+            stage.font = "20px Arial";
+            stage.fillText("In " + moves + " moves!", puzzleWidth / 2, 200);
+        }
+
+        function createMessage (message){
+            stage.fillStyle = "#FFFFFF";
+            stage.globalAlpha = 1;
+            stage.textAlign = "center";
+            stage.textBaseline = "middle";
+            stage.font = "20px Arial";
+            stage.fillText(message,puzzleWidth / 2, puzzleWidth / 2, 250);
+        }
+
         function createTitle (message){
             stage.fillStyle = "#000000";
             stage.globalAlpha = .4;
-            stage.fillRect(100,puzzleHeight - 40,puzzleWidth - 200,40);
+            stage.fillRect(50,puzzleHeight - 40,puzzleWidth - 100,100);
             stage.fillStyle = "#FFFFFF";
             stage.globalAlpha = 1;
             stage.textAlign = "center";
@@ -93,6 +131,7 @@
             stage.font = "20px Arial";
             stage.fillText(message,puzzleWidth / 2,puzzleHeight - 20);
         }
+
         function buildPieces (){
             var i;
             var piece;
@@ -207,7 +246,7 @@
             stage.strokeRect( mouse.x - (pieceWidth / 2), mouse.y - (pieceHeight / 2), pieceWidth,pieceHeight);
         }
         function pieceDropped (e){
-            //works!!!
+            //Counts number of moves in each level
             movesCounter +=1;
             console.log(movesCounter);
 
