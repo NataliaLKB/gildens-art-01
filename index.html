@@ -9,18 +9,21 @@
             display: inline;
         }
     </style>
-    <title>Gamify Art: The Puzzle</title>
+    <title>Planet3/art//news</title>
     <script>
     // To do: 
     // - Random selection of images.
     // - Testing
     // - Mobile responsive?
-    // - Level Counter
-    // - Move Counter
+    // - Level Counter - needs to show after you finish a level (-1);
+    // - Move Counter - needs to show while you play
+    // - only 5 levels then you win
 
 
         var difficulty = 1;
-        const hoverTint = '#009900';
+        var hoverTint = '#009900';
+
+        var levelCounter = 0;
 
         var stage;
         var canvas;
@@ -36,15 +39,25 @@
 
         var mouse;
 
-        function init(){
-        		difficulty +=1;
+        //Called at the start of every new game and Level
+        function init (){
+        	difficulty +=1;
+            levelCounter +=1;
+            console.log("you are at level" + levelCounter);
+            //resets movesCounter between levels
+            movesCounter = 0;
 
-          img = new Image();
-          img.addEventListener('load',onImage,false);
-          //Eventually have function with random pictures to pick from
-          img.src = "./img/full.jpg";
+            img = new Image();
+            img.addEventListener('load',onImage,false);
+          
+            img.src = pickImg();
         }
-        function onImage(e){
+
+        function pickImg (){
+            return "./img/full.jpg";
+        }
+
+        function onImage (){
             pieceWidth = Math.floor(img.width / difficulty)
             pieceHeight = Math.floor(img.height / difficulty)
             puzzleWidth = pieceWidth * difficulty;
@@ -52,14 +65,15 @@
             setCanvas();
             initPuzzle();
         }
-        function setCanvas(){
+
+        function setCanvas (){
             canvas = document.getElementById('canvas');
             stage = canvas.getContext('2d');
             canvas.width = puzzleWidth;
             canvas.height = puzzleHeight;
             canvas.style.border = "1px solid black";
         }
-        function initPuzzle(){
+        function initPuzzle (){
             pieces = [];
             mouse = {x:0,y:0};
             currentPiece = null;
@@ -68,7 +82,7 @@
             createTitle("Click to Start Puzzle");
             buildPieces();
         }
-        function createTitle(msg){
+        function createTitle (message){
             stage.fillStyle = "#000000";
             stage.globalAlpha = .4;
             stage.fillRect(100,puzzleHeight - 40,puzzleWidth - 200,40);
@@ -77,9 +91,9 @@
             stage.textAlign = "center";
             stage.textBaseline = "middle";
             stage.font = "20px Arial";
-            stage.fillText(msg,puzzleWidth / 2,puzzleHeight - 20);
+            stage.fillText(message,puzzleWidth / 2,puzzleHeight - 20);
         }
-        function buildPieces(){
+        function buildPieces (){
             var i;
             var piece;
             var xPos = 0;
@@ -97,8 +111,8 @@
             }
             document.onmousedown = shufflePuzzle;
         }
-        function shufflePuzzle(){
-            pieces = shuffleArray(pieces);
+        function shufflePuzzle (){
+            pieces = shuffleArrayPieces(pieces);
             stage.clearRect(0,0,puzzleWidth,puzzleHeight);
             var i;
             var piece;
@@ -118,7 +132,7 @@
             }
             document.onmousedown = onPuzzleClick;
         }
-        function onPuzzleClick(e){
+        function onPuzzleClick (e){
             if(e.layerX || e.layerX == 0){
                 mouse.x = e.layerX - canvas.offsetLeft;
                 mouse.y = e.layerY - canvas.offsetTop;
@@ -138,7 +152,7 @@
                 document.onmouseup = pieceDropped;
             }
         }
-        function checkPieceClicked(){
+        function checkPieceClicked (){
             var i;
             var piece;
             for(i = 0;i < pieces.length;i++){
@@ -152,7 +166,7 @@
             }
             return null;
         }
-        function updatePuzzle(e){
+        function updatePuzzle (e){
             currentDropPiece = null;
             if(e.layerX || e.layerX == 0){
                 mouse.x = e.layerX - canvas.offsetLeft;
@@ -192,7 +206,11 @@
             stage.restore();
             stage.strokeRect( mouse.x - (pieceWidth / 2), mouse.y - (pieceHeight / 2), pieceWidth,pieceHeight);
         }
-        function pieceDropped(e){
+        function pieceDropped (e){
+            //works!!!
+            movesCounter +=1;
+            console.log(movesCounter);
+
             document.onmousemove = null;
             document.onmouseup = null;
             if(currentDropPiece != null){
@@ -204,7 +222,7 @@
             }
             resetPuzzleAndCheckWin();
         }
-        function resetPuzzleAndCheckWin(){
+        function resetPuzzleAndCheckWin (){
             stage.clearRect(0,0,puzzleWidth,puzzleHeight);
             var gameWin = true;
             var i;
@@ -222,15 +240,15 @@
                 setTimeout(gameOver,500);
             }
         }
-        function gameOver(){
+        function gameOver (){
             document.onmousedown = null;
             document.onmousemove = null;
             document.onmouseup = null;
             init();
         }
-        function shuffleArray(o){
-            for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-            return o;
+        function shuffleArrayPieces (pieces){
+            for(var j, x, i = pieces.length; i; j = parseInt(Math.random() * i), x = pieces[--i], pieces[i] = pieces[j], pieces[j] = x);
+            return pieces;
         }
 
     </script>
