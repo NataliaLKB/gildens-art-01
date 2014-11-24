@@ -22,7 +22,7 @@
     // - Touch functionality. Drag and job. JQuery UI?
 
         var difficulty = 1;
-        // var hoverTint = '#009900';
+        var hoverTint = '#009900';
 
         var levelCounter = 0;
 
@@ -169,9 +169,12 @@
                     yPos += pieceHeight;
                 }
             }
-            console.log(piece.sx);
-            document.onmousedown = shufflePuzzle;
-            document.addEventListener('touchend', shufflePuzzle);
+            if ('ontouchstart' in document.documentElement) {
+            // touch events are supported
+                document.addEventListener('touchend', shufflePuzzle);
+                return;
+            }
+            document.onmousedown = shufflePuzzle
         }
         function shufflePuzzle (){
             console.log('shufflePuzzle');
