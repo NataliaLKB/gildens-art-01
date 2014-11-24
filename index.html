@@ -22,7 +22,7 @@
     // - Touch functionality. Drag and job. JQuery UI?
 
         var difficulty = 1;
-        var hoverTint = '#009900';
+        // var hoverTint = '#009900';
 
         var levelCounter = 0;
 
@@ -39,7 +39,6 @@
         var currentDropPiece;
 
         var mouse;
-        var touch;
 
         //Called at the start of every new game and Level
         function init (){
@@ -91,7 +90,6 @@
         function initPuzzle (){
             pieces = [];
             mouse = {x:0,y:0};
-            touch = {x:0, y:0};
 
             currentPiece = null;
             currentDropPiece = null;
@@ -109,6 +107,7 @@
             movesCounter = 0;
         }
         function createDomMessage (message) {
+
             var overlayWidth = img.width - 200;
             var overlayHeight = img.height - 200;
 
@@ -132,7 +131,6 @@
 
             if (deleteMes[0] === null)  return;
 
-            console.log(deleteMes[0]);
             while (deleteMes[0]) {
                 deleteMes[0].parentNode.removeChild(deleteMes[0]);
             }
@@ -154,6 +152,8 @@
         }
 
         function buildPieces (){
+            console.log('buildPieces');
+
             var i;
             var piece;
             var xPos = 0;
@@ -169,10 +169,13 @@
                     yPos += pieceHeight;
                 }
             }
+            console.log(piece.sx);
             document.onmousedown = shufflePuzzle;
-            document.ontouchdown = shufflePuzzle;
+            document.addEventListener('touchend', shufflePuzzle);
         }
         function shufflePuzzle (){
+            console.log('shufflePuzzle');
+
             deleteDomMessage("deleteMe");
 
             pieces = shuffleArrayPieces(pieces);
@@ -194,22 +197,20 @@
                 }
             }
             document.onmousedown = onPuzzleClick;
-            document.ontouchdown = onPuzzleClick;
+            // document.addEventListener('touchstart', onPuzzleClick);
         }
+
         function onPuzzleClick (e){
+            console.log('onPuzzleClick');
+
+
             if(e.layerX || e.layerX == 0){
                 mouse.x = e.layerX - canvas.offsetLeft;
                 mouse.y = e.layerY - canvas.offsetTop;
-
-                touch.x = e.layerX - canvas.offsetLeft;
-                touch.y = e.layerY - canvas.offsetTop;
             }
             else if(e.offsetX || e.offsetX == 0){
                 mouse.x = e.offsetX - canvas.offsetLeft;
                 mouse.y = e.offsetY - canvas.offsetTop;
-
-                touch.x = e.offsetX - canvas.offsetLeft;
-                touch.y = e.offsetY - canvas.offsetTop;
             }
             currentPiece = checkPieceClicked();
             if(currentPiece != null){
@@ -218,18 +219,19 @@
                 stage.globalAlpha = .9;
                 stage.drawImage(img, currentPiece.sx, currentPiece.sy, pieceWidth, pieceHeight, mouse.x - (pieceWidth / 2), mouse.y - (pieceHeight / 2), pieceWidth, pieceHeight);
 
-                stage.drawImage(img, currentPiece.sx, currentPiece.sy, pieceWidth, pieceHeight, touch.x - (pieceWidth / 2), touch.y - (pieceHeight / 2), pieceWidth, pieceHeight);
-
                 stage.restore();
 
                 document.onmousemove = updatePuzzle;
-                document.ontouchmove = updatePuzzle;
+                document.addEventListener('touchmove', updatePuzzle);
 
                 document.onmouseup = pieceDropped;
-                document.ontouchup = pieceDropped;
+                document.addEventListener('touchend', pieceDropped);
             }
         }
+
         function checkPieceClicked (){
+            console.log('checkPieceClicked');
+
             var i;
             var piece;
             for(i = 0;i < pieces.length;i++){
@@ -243,21 +245,18 @@
             }
             return null;
         }
+        //this is NOT being accessed on touch?
         function updatePuzzle (e){
+            console.log("updatePuzzle")
+
             currentDropPiece = null;
             if(e.layerX || e.layerX == 0){
                 mouse.x = e.layerX - canvas.offsetLeft;
                 mouse.y = e.layerY - canvas.offsetTop;
-
-                touch.x = e.layerX - canvas.offsetLeft;
-                touch.y = e.layerY - canvas.offsetTop;
             }
             else if(e.offsetX || e.offsetX == 0){
                 mouse.x = e.offsetX - canvas.offsetLeft;
                 mouse.y = e.offsetY - canvas.offsetTop;
-
-                touch.x = e.offsetX - canvas.offsetLeft;
-                touch.y = e.offsetY - canvas.offsetTop;
             }
             stage.clearRect(0,0,puzzleWidth,puzzleHeight);
             var i;
@@ -289,15 +288,14 @@
             stage.restore();
             stage.strokeRect( mouse.x - (pieceWidth / 2), mouse.y - (pieceHeight / 2), pieceWidth,pieceHeight);
         }
+
         function pieceDropped (e){
+            console.log("pieceDropped");
             //Counts number of moves in each level
             movesCounter +=1;
 
             document.onmousemove = null;
             document.onmouseup = null;
-
-            document.ontouchmove = null;
-            document.ontouchup = null;
 
             if(currentDropPiece != null){
                 var tmp = {xPos:currentPiece.xPos,yPos:currentPiece.yPos};
@@ -330,10 +328,6 @@
             document.onmousedown = null;
             document.onmousemove = null;
             document.onmouseup = null;
-
-            document.ontouchdown = null;
-            document.ontouchmove = null;
-            document.ontouchup = null;
 
             if (levelCounter < 6 ) {
                 init();
