@@ -2,11 +2,16 @@
 <html>
 <head>
 	<style>
-        body {
-            text-align:center;
+        p {
+            font-size: 20px;
+            font-family: Arial;
+            color: #fff;
         }
-      canvas {
-            display: inline;
+        #overlay {
+            position: absolute;
+            text-align: center;
+            padding: 50px;
+            margin-left: 50px;
         }
     </style>
     <title>Planet3/art//news</title>
@@ -15,10 +20,6 @@
     // - Random selection of images.
     // - Testing
     // - Mobile responsive?
-    // - Level Counter - needs to show after you finish a level (-1);
-    // - Move Counter - needs to show while you play
-    // - only 5 levels then you win
-
 
         var difficulty = 1;
         var hoverTint = '#009900';
@@ -49,7 +50,7 @@
           
             img.src = pickImg();
         }
-        //Need to finish...
+        //Need to finish... One pictures are received
         function pickImg (){
             return "./img/full.jpg";
         }
@@ -80,17 +81,35 @@
             if (levelCounter === 1) {
                 createTitle("Click to Start");
             } else {
-                levelMessage(levelCounter - 1);
-                movesMessage(movesCounter);
-                createMessage("Ready for the Next Puzzle?");
+                createDomMessage("<p id='deleteMe'>Congratulations! You finished Level " + 
+                    (levelCounter - 1) + " in " + movesCounter + " moves!</p>");
+                createDomMessage("<p id='deleteMe'>Ready for the Next Puzzle?</p>");
                 createTitle("Click to Start");
             }
             buildPieces();
             //resets movesCounter between levels
             movesCounter = 0;
         }
+        function createDomMessage (message) {
+            overlayWidth = "300px";//canvas.width - 200;
+            document.getElementById("overlay").style["width"] = overlayWidth;
+            document.getElementById("overlay").style["top"] = "300px";
+            document.getElementById("overlay").style["background-color"] = "rgba(0,0,0,0.4)";
 
-        function levelMessage (level){
+            var parser = new DOMParser()
+            var parsedHtml = parser.parseFromString(message, "text/html");
+            var HTML = parsedHtml.childNodes[0];
+            
+            var parsedMessage = HTML.childNodes[1];
+            document.getElementById("message").appendChild(parsedMessage.childNodes[0]);
+        }
+
+        function deleteDomMessage (id) {
+            $('#'+id).remove();
+            document.getElementById("overlay").style["background-color"] = "rgba(0,0,0,0)";
+            document.getElementById("overlay").style["top"] = "0";
+        }
+        function createMessage (message){
             stage.fillStyle = "#000000";
             stage.globalAlpha = .4;
             stage.fillRect(50, 50 ,puzzleWidth - 100, puzzleHeight - 200);
@@ -99,25 +118,7 @@
             stage.textAlign = "center";
             stage.textBaseline = "middle";
             stage.font = "20px Arial";
-            stage.fillText("Congratulations you finished Level " + level, puzzleWidth / 2, 150);
-        }
-
-        function movesMessage (moves){
-            stage.fillStyle = "#FFFFFF";
-            stage.globalAlpha = 1;
-            stage.textAlign = "center";
-            stage.textBaseline = "middle";
-            stage.font = "20px Arial";
-            stage.fillText("In " + moves + " moves!", puzzleWidth / 2, 200);
-        }
-
-        function createMessage (message){
-            stage.fillStyle = "#FFFFFF";
-            stage.globalAlpha = 1;
-            stage.textAlign = "center";
-            stage.textBaseline = "middle";
-            stage.font = "20px Arial";
-            stage.fillText(message,puzzleWidth / 2, puzzleWidth / 2, 250);
+            stage.fillText(message,puzzleWidth / 2, puzzleWidth / 2, 225);
         }
 
         function createTitle (message){
@@ -151,6 +152,9 @@
             document.onmousedown = shufflePuzzle;
         }
         function shufflePuzzle (){
+            deleteDomMessage("deleteMe");
+            deleteDomMessage("deleteMe");
+
             pieces = shuffleArrayPieces(pieces);
             stage.clearRect(0,0,puzzleWidth,puzzleHeight);
             var i;
@@ -248,7 +252,6 @@
         function pieceDropped (e){
             //Counts number of moves in each level
             movesCounter +=1;
-            console.log(movesCounter);
 
             document.onmousemove = null;
             document.onmouseup = null;
@@ -283,7 +286,12 @@
             document.onmousedown = null;
             document.onmousemove = null;
             document.onmouseup = null;
-            init();
+
+            if (levelCounter < 2 ) {
+                init();
+            } else {
+                createMessage("You Won the Game!");
+            }
         }
         function shuffleArrayPieces (pieces){
             for(var j, x, i = pieces.length; i; j = parseInt(Math.random() * i), x = pieces[--i], pieces[i] = pieces[j], pieces[j] = x);
@@ -295,7 +303,10 @@
 
 <body onload="init();">
     <br><br>
+    <div id="overlay">
+        <div id="message"></div>
+    </div>
     <canvas id="canvas"></canvas>
 </body>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </html>
