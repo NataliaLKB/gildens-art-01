@@ -15,14 +15,6 @@
             text-align: center;
             margin-left: 50px;
         }
-        /*#canvas-container {
-           width: 100%;
-           text-align:center;
-        }
-
-        canvas {
-           display: inline;
-        }*/
     </style>
     <title>Planet3/art//news</title>
     <script>
@@ -74,20 +66,20 @@
             img.src = "./img/tablet/Gildens233w800.jpg";
         }
 
-        // function whichSrc (){
-        //     if (window.innerHeight > 1599) {
-        //         return "./img/HD/Gildens233h1600.jpg";
-        //     } else 
-        //     if (window.innerHeight < 1599 && window.innerHeight > 1199) {
-        //         return "./img/tablet/Gildens233w1200.jpg";
-        //     } else 
-        //     if (window.innerHeight < 1199 && window.innerHeight > 799) {
-        //         return "./img/tablet/Gildens233w800.jpg";
-        //     } else 
-        //     if (window.innerHeight < 799 && window.innerHeight > 760) {
-        //         return "./img/tablet/Gildens233w768.jpg";
-        //     }
-        // }
+        function whichSrc (){
+            if (window.innerHeight > 1599) {
+                return "./img/HD/Gildens233h1600.jpg";
+            } else 
+            if (window.innerHeight < 1599 && window.innerHeight > 1199) {
+                return "./img/tablet/Gildens233w1200.jpg";
+            } else 
+            if (window.innerHeight < 1199 && window.innerHeight > 799) {
+                return "./img/tablet/Gildens233w800.jpg";
+            } else 
+            if (window.innerHeight < 799 && window.innerHeight > 760) {
+                return "./img/tablet/Gildens233w768.jpg";
+            }
+        }
 
         function onImage (){
             pieceWidth = Math.floor(img.width / difficulty)
@@ -195,7 +187,6 @@
 
         function shufflePuzzle (){
             console.log('shufflePuzzle');
-            var here = document
 
             deleteDomMessage("deleteMe");
 
