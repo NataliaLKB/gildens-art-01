@@ -308,8 +308,8 @@
 
         function updatePuzzle (e){
             currentDropPiece = null;
-            console.log(e.touches[0]);
-            if (e.touches[0]){
+            
+            if (e.touches){
             // if (e.layerX === 0){
                 mouse.x = e.touches[0].clientX;
                 mouse.y = e.touches[0].clientY;
