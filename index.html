@@ -16,6 +16,7 @@
     <title>Planet3/art//news</title>
     <script>
     // To do:
+    // - ON PUZZLE CLICK STILL FIRING WHEN INIT GAME INSTEAD OF SHUFFLEPIECES.
     // - Testing
     // - Resize image to correspond to the height x width. 
     // - Black background all around.
@@ -73,6 +74,7 @@
         }
 
         function setCanvas (){
+            console.log("setCanvas");
             canvas = document.getElementById('canvas');
             stage = canvas.getContext('2d');
             canvas.width = puzzleWidth;
@@ -81,6 +83,7 @@
         }
 
         function initPuzzle (){
+            console.log('initPuzzle');
             pieces = [];
             mouse = {x:0,y:0};
 
@@ -162,11 +165,26 @@
                     yPos += pieceHeight;
                 }
             }
-            // no need for touch event here.
-            document.onmousedown = shufflePuzzle
+            document.onmousedown = shufflePuzzle;
+            // document.addEventListener('touchstart', function (e) {
+            //     // stop touch event
+            //     e.stopPropagation();
+            //     e.preventDefault();
 
+            //     // translate to mouse event
+            //     var clkEvt = document.createEvent('MouseEvent');
+            //     clkEvt.initMouseEvent('mouseup', true, true, window, e.detail, 
+            //                  e.touches[0].screenX, e.touches[0].screenY, 
+            //                  e.touches[0].clientX, e.touches[0].clientY, 
+            //                  false, false, false, false, 
+            //                  0, null);
+            //     document.dispatchEvent(clkEvt);
+
+            //     // or just handle touch event
+            //     shufflePuzzle();
+            // }, false);
         }
-
+        //not accessed second time around;
         function shufflePuzzle (){
             console.log('shufflePuzzle');
             var here = document
@@ -199,7 +217,7 @@
 
                 // translate to mouse event
                 var clkEvt = document.createEvent('MouseEvent');
-                clkEvt.initMouseEvent('mousemove', true, true, window, e.detail, 
+                clkEvt.initMouseEvent('mousedown', true, true, window, e.detail, 
                              e.touches[0].screenX, e.touches[0].screenY, 
                              e.touches[0].clientX, e.touches[0].clientY, 
                              false, false, false, false, 
@@ -212,8 +230,8 @@
         }
 
         function onPuzzleClick (e){
-            // touchHandler(e);
             console.log('onPuzzleClick');
+
             // to ensure on touch events, functions still work.
             if (e.layerX === 0){
                 mouse.x = e.touches[0].clientX;
@@ -228,8 +246,6 @@
                     mouse.y = e.offsetY - canvas.offsetTop;
                 }
             }
-
-            //below line not working!!
             currentPiece = checkPieceClicked();
             
             if(currentPiece != null){
@@ -283,11 +299,9 @@
         }
 
         function updatePuzzle (e){
-            console.log("updatePuzzle")
 
             currentDropPiece = null;
-            //below code probably has to change
-        
+
             if (e.layerX === 0){
                 mouse.x = e.touches[0].clientX;
                 mouse.y = e.touches[0].clientY;
@@ -334,12 +348,14 @@
         }
 
         function pieceDropped (e){
-            console.log("pieceDropped");
+            console.log("piece dropped");
             //Counts number of moves in each level
             movesCounter +=1;
 
             document.onmousemove = null;
             document.onmouseup = null;
+            document.addEventListener('touchend');
+            //do I need touch options for above?
 
             if(currentDropPiece != null){
                 var tmp = {xPos:currentPiece.xPos,yPos:currentPiece.yPos};
@@ -351,6 +367,7 @@
             resetPuzzleAndCheckWin();
         }
         function resetPuzzleAndCheckWin (){
+            console.log("checkwin");
             stage.clearRect(0,0,puzzleWidth,puzzleHeight);
             var gameWin = true;
             var i;
@@ -369,9 +386,14 @@
             }
         }
         function gameOver (){
+            console.log("gameover");
             document.onmousedown = null;
             document.onmousemove = null;
             document.onmouseup = null;
+            //do I need touch options for above?
+            document.addEventListener('touchend', function() {
+                console.log("GameOver touchend")
+            });
 
             if (levelCounter < 6 ) {
                 init();
