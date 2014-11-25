@@ -128,6 +128,9 @@
             stage.drawImage(img, 0, 0, puzzleWidth, puzzleHeight, 0, 0, puzzleWidth, puzzleHeight);
             if (levelCounter === 1) {
                 createTitle("Click to Start");
+                buildPieces();
+                //resets movesCounter between levels
+                movesCounter = 0;
             } else {
                 createDomMessage("<p id='artname' class='deleteMe'>A Mother and Child</p>");
                 createDomMessage("<p id='name' class='deleteMe'>Albert Gleizes, 1881 - 1953</p>");
@@ -144,12 +147,13 @@
                     createDomMessage("<p class='deleteMe'>Congratulations! You finished Level " + 
                     (levelCounter - 1) + " in " + movesCounter + " moves!</p>");
                     createDomMessage("<p class='deleteMe'>Ready for the Next Puzzle?</p>");
+
+                    buildPieces();
+                    //resets movesCounter between levels
+                    movesCounter = 0;
                 }, 1500)
                 createTitle("Click to Start");
             }
-            buildPieces();
-            //resets movesCounter between levels
-            movesCounter = 0;
         }
         function createDomMessage (message) {
 
