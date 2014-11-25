@@ -241,7 +241,7 @@
             console.log('onPuzzleClick');
 
             // to ensure on touch events, functions still work.
-            if (e.touches[0]){
+            if (e.touches){
                 mouse.x = e.touches[0].clientX;
                 mouse.y = e.touches[0].clientY;
             } else {
@@ -308,7 +308,7 @@
 
         function updatePuzzle (e){
             currentDropPiece = null;
-            
+
             if (e.touches){
             // if (e.layerX === 0){
                 mouse.x = e.touches[0].clientX;
