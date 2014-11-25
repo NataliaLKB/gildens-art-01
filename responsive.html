@@ -19,22 +19,9 @@
     <title>Planet3/art//news</title>
     <script>
     // To do:
-    // - ON PUZZLE CLICK STILL FIRING WHEN INIT GAME INSTEAD OF SHUFFLEPIECES.
+    // - Work on Tablet??? Need to check.
     // - Testing
     // - Resize image to correspond to the height x width. 
-    // - Black background all around.
-
-        //     //tablets:
-               // 2560 x 1600
-        //     // 1920 x 1200
-        //     // 1280 x 800
-        //     // 1024 x 768
-        
-        //     //phones:
-        //     // 960 x 540
-        //     // 854 x 480
-               // 640 x 360
-        //     // 480 x 320
 
         var difficulty = 1;
         var hoverTint = '#009900';
@@ -61,38 +48,28 @@
             levelCounter +=1;
 
             img = new Image();
-            img.addEventListener('load',onImage,false);
-          
+            // document.addEventListener('load',setCanvas,false);
             img.src = "./img/tablet/Gildens233w800.jpg";
+
+            setCanvas();
         }
 
-        function whichSrc (){
-            if (window.innerHeight >) {
-                return "";
-            }
-            if (window.innerHeight < && window.innerHeight >) {
-                return "";
-            }
-            if (window.innerHeight < && window.innerHeight >) {
-                return "";
-            }
-            if (window.innerHeight < && window.innerHeight >) {
-                return "";
-            }
-            if (window.innerHeight < && window.innerHeight >) {
-                return "";
-            }
-            if (window.innerHeight < && window.innerHeight >) {
-                return "";
-            }
-        }
 
         function onImage (){
-            pieceWidth = Math.floor(img.width / difficulty)
-            pieceHeight = Math.floor(img.height / difficulty)
+            // imgWidth = canvas.width;
+            // imgHeight = canvas.height;
+            img.onload = function () {
+                stage.drawImage(img, 0, 0, canvas.width, canvas.height);
+            }
+            
+
+            console.log(canvas.width);
+            console.log(img.width);
+
+            pieceWidth = Math.floor(canvas.width / difficulty)
+            pieceHeight = Math.floor(canvas.height / difficulty)
             puzzleWidth = pieceWidth * difficulty;
             puzzleHeight = pieceHeight * difficulty;
-            setCanvas();
             initPuzzle();
         }
 
@@ -100,9 +77,12 @@
             console.log("setCanvas");
             canvas = document.getElementById('canvas');
             stage = canvas.getContext('2d');
-            canvas.width = puzzleWidth;
-            canvas.height = puzzleHeight;
-            canvas.style.border = "1px solid black";
+            canvas.width = window.innerWidth -25;
+            canvas.height = window.innerHeight -25;
+
+            //below temp
+            canvas.style.border = "1px solid red";
+            onImage();
         }
 
         function initPuzzle (){
@@ -112,7 +92,11 @@
 
             currentPiece = null;
             currentDropPiece = null;
-            stage.drawImage(img, 0, 0, puzzleWidth, puzzleHeight, 0, 0, puzzleWidth, puzzleHeight);
+            stage.drawImage(img, 0, 0, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+
+            console.log(canvas.width);
+            console.log(img.width);
+
             if (levelCounter === 1) {
                 createTitle("Click to Start");
             } else {
@@ -210,12 +194,13 @@
         //not accessed second time around;
         function shufflePuzzle (){
             console.log('shufflePuzzle');
-            var here = document
 
             deleteDomMessage("deleteMe");
+            console.log(canvas.width);
+            console.log(img.width);
 
             pieces = shuffleArrayPieces(pieces);
-            stage.clearRect(0,0,puzzleWidth,puzzleHeight);
+            stage.clearRect(0,0,canvas.width,canvas.height);
             var i;
             var piece;
             var xPos = 0;
@@ -436,12 +421,6 @@
     <div id="overlay">
         <div id="message"></div>
     </div>
-    <!-- <div class = "wrapper">
-        <div class = "container">
-            <div class = " --><!-- canvas-container"> -->
-                <canvas id="canvas"></canvas>
-            <!-- </div>
-        </div>
-    </div> -->
+    <canvas id="canvas"></canvas>
 </body>
 </html>
