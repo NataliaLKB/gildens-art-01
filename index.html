@@ -6,7 +6,7 @@
             background-color: black;
         } 
         p {
-            font-size: 20px;
+            font-size: 2em;
             font-family: Arial;
             color: #fff;
         }
@@ -15,6 +15,25 @@
             text-align: center;
             margin-left: 50px;
         }
+        #artname {
+            font-size: 3.5em;
+            margin-bottom: 0em;
+        }
+        #name {
+            margin: 0em;
+        }
+        #description {
+            font-size: 1.5em;
+            margin-top: .5em;
+        }
+        #url {
+            font-size: 1em;
+        }
+        #contact {
+            font-size: 1em;
+            margin-bottom: 8em;
+        }
+
     </style>
     <title>Planet3/art//news</title>
     <script>
@@ -110,9 +129,22 @@
             if (levelCounter === 1) {
                 createTitle("Click to Start");
             } else {
-                createDomMessage("<p class='deleteMe'>Congratulations! You finished Level " + 
+                createDomMessage("<p id='artname' class='deleteMe'>A Mother and Child</p>");
+                createDomMessage("<p id='name' class='deleteMe'>Albert Gleizes, 1881 - 1953</p>");
+                setTimeout(function() {
+                    createDomMessage("<p id='description' class='deleteMe'>Painter and cubism theorist</p><br>");
+                }, 500)
+                setTimeout(function() {
+                    createDomMessage("<p id='url' class='deleteMe'>www.gildensarts.com/</p><br>");
+                }, 1000)
+                setTimeout(function() {
+                    createDomMessage("<p id='contact' class='deleteMe'>info@gildensarts.com</p><br>");
+                }, 1000)
+                setTimeout(function() {
+                    createDomMessage("<p class='deleteMe'>Congratulations! You finished Level " + 
                     (levelCounter - 1) + " in " + movesCounter + " moves!</p>");
-                createDomMessage("<p class='deleteMe'>Ready for the Next Puzzle?</p>");
+                    createDomMessage("<p class='deleteMe'>Ready for the Next Puzzle?</p>");
+                }, 1500)
                 createTitle("Click to Start");
             }
             buildPieces();
