@@ -162,12 +162,9 @@
                     yPos += pieceHeight;
                 }
             }
-            // if ('ontouchstart' in document.documentElement) {
-            // // touch events are supported
-            //     document.addEventListener('touchend', shufflePuzzle);
-            //     return;
-            // }
+            // no need for touch event here.
             document.onmousedown = shufflePuzzle
+
         }
 
         function shufflePuzzle (){
@@ -195,40 +192,88 @@
                 }
             }
             document.onmousedown = onPuzzleClick;
+            document.addEventListener('touchstart', function (e) {
+                // stop touch event
+                e.stopPropagation();
+                e.preventDefault();
+
+                // translate to mouse event
+                var clkEvt = document.createEvent('MouseEvent');
+                clkEvt.initMouseEvent('mousemove', true, true, window, e.detail, 
+                             e.touches[0].screenX, e.touches[0].screenY, 
+                             e.touches[0].clientX, e.touches[0].clientY, 
+                             false, false, false, false, 
+                             0, null);
+                document.dispatchEvent(clkEvt);
+
+                // or just handle touch event
+                onPuzzleClick(e);
+            }, false);
         }
 
         function onPuzzleClick (e){
+            // touchHandler(e);
             console.log('onPuzzleClick');
-            if(e.layerX || e.layerX == 0){
-                mouse.x = e.layerX - canvas.offsetLeft;
-                mouse.y = e.layerY - canvas.offsetTop;
+            // to ensure on touch events, functions still work.
+            if (e.layerX === 0){
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+            } else {
+                if(e.layerX || e.layerX == 0){
+                    mouse.x = e.layerX - canvas.offsetLeft;
+                    mouse.y = e.layerY - canvas.offsetTop;
+                }
+                else if(e.offsetX || e.offsetX == 0){
+                    mouse.x = e.offsetX - canvas.offsetLeft;
+                    mouse.y = e.offsetY - canvas.offsetTop;
+                }
             }
-            else if(e.offsetX || e.offsetX == 0){
-                mouse.x = e.offsetX - canvas.offsetLeft;
-                mouse.y = e.offsetY - canvas.offsetTop;
-            }
+
+            //below line not working!!
             currentPiece = checkPieceClicked();
+            
             if(currentPiece != null){
+
                 stage.clearRect(currentPiece.xPos,currentPiece.yPos,pieceWidth,pieceHeight);
                 stage.save();
                 stage.globalAlpha = .9;
                 stage.drawImage(img, currentPiece.sx, currentPiece.sy, pieceWidth, pieceHeight, mouse.x - (pieceWidth / 2), mouse.y - (pieceHeight / 2), pieceWidth, pieceHeight);
                 stage.restore();
+
                 document.onmousemove = updatePuzzle;
-                document.addEventListener('touchmove', updatePuzzle);
+                document.addEventListener('touchmove', function (e) {
+                    // stop touch event
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    // translate to mouse event
+                    var clkEvt = document.createEvent('MouseEvent');
+                    clkEvt.initMouseEvent('mousemove', true, true, window, e.detail, 
+                                 e.touches[0].screenX, e.touches[0].screenY, 
+                                 e.touches[0].clientX, e.touches[0].clientY, 
+                                 false, false, false, false, 
+                                 0, null);
+                    document.dispatchEvent(clkEvt);
+
+                    // or just handle touch event
+                    updatePuzzle(e);
+                }, false);
+
                 document.onmouseup = pieceDropped;
                 document.addEventListener('touchend', pieceDropped);
+                return;
             }
         }
-        //NOT GETTING PIECE. WHY?
-        function checkPieceClicked (){
-            console.log('checkPieceClicked');
+
+        function checkPieceClicked (e){
             var i;
             var piece;
             for(i = 0;i < pieces.length;i++){
                 piece = pieces[i];
-                if(mouse.x < piece.xPos || mouse.x > (piece.xPos + pieceWidth) || mouse.y < piece.yPos || mouse.y > (piece.yPos + pieceHeight)){
-                    //PIECE NOT HIT
+                if(mouse.x < piece.xPos || mouse.x > (piece.xPos + 
+                    pieceWidth) || mouse.y < piece.yPos || mouse.y > (piece.yPos + 
+                    pieceHeight)){
+                    //return nothing so that loop continuess
                 }
                 else{
                     return piece;
@@ -236,19 +281,27 @@
             }
             return null;
         }
-        //this is NOT being accessed on touch.
+
         function updatePuzzle (e){
             console.log("updatePuzzle")
 
             currentDropPiece = null;
-            if(e.layerX || e.layerX == 0){
-                mouse.x = e.layerX - canvas.offsetLeft;
-                mouse.y = e.layerY - canvas.offsetTop;
+            //below code probably has to change
+        
+            if (e.layerX === 0){
+                mouse.x = e.touches[0].clientX;
+                mouse.y = e.touches[0].clientY;
+            } else {
+                if(e.layerX || e.layerX == 0){
+                    mouse.x = e.layerX - canvas.offsetLeft;
+                    mouse.y = e.layerY - canvas.offsetTop;
+                }
+                else if(e.offsetX || e.offsetX == 0){
+                    mouse.x = e.offsetX - canvas.offsetLeft;
+                    mouse.y = e.offsetY - canvas.offsetTop;
+                }
             }
-            else if(e.offsetX || e.offsetX == 0){
-                mouse.x = e.offsetX - canvas.offsetLeft;
-                mouse.y = e.offsetY - canvas.offsetTop;
-            }
+
             stage.clearRect(0,0,puzzleWidth,puzzleHeight);
             var i;
             var piece;
@@ -346,5 +399,4 @@
         </div>
     </div> -->
 </body>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
- --></html>
+</html>
