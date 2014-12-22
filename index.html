@@ -242,7 +242,12 @@
             // or just handle touch event
             onPuzzleClick(e);
         }
-        
+
+        function shuffleArrayPieces (pieces){
+            for(var j, x, i = pieces.length; i; j = parseInt(Math.random() * i), x = pieces[--i], pieces[i] = pieces[j], pieces[j] = x);
+            return pieces;
+        }
+
         function onPuzzleClick (e){
             console.log('onPuzzleClick');
 
@@ -271,23 +276,7 @@
                 stage.restore();
 
                 document.onmousemove = updatePuzzle;
-                document.addEventListener('touchmove', function (e) {
-                    // stop touch event
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    // translate to mouse event
-                    var clkEvt = document.createEvent('MouseEvent');
-                    clkEvt.initMouseEvent('mousemove', true, true, window, e.detail, 
-                                 e.touches[0].screenX, e.touches[0].screenY, 
-                                 e.touches[0].clientX, e.touches[0].clientY, 
-                                 false, false, false, false, 
-                                 0, null);
-                    document.dispatchEvent(clkEvt);
-
-                    // or just handle touch event
-                    updatePuzzle(e);
-                }, false);
+                document.addEventListener('touchmove', touchMove);
 
                 document.onmouseup = pieceDropped;
                 document.addEventListener('touchend', pieceDropped);
@@ -295,6 +284,24 @@
             }
         }
 
+        function touchMove (e){
+            // stop touch event
+            e.stopPropagation();
+            e.preventDefault();
+
+            // translate to mouse event
+            var clkEvt = document.createEvent('MouseEvent');
+            clkEvt.initMouseEvent('mousemove', true, true, window, e.detail, 
+                         e.touches[0].screenX, e.touches[0].screenY, 
+                         e.touches[0].clientX, e.touches[0].clientY, 
+                         false, false, false, false, 
+                         0, null);
+            document.dispatchEvent(clkEvt);
+
+            // or just handle touch event
+            updatePuzzle(e);
+        }
+        
         function checkPieceClicked (e){
             var i;
             var piece;
@@ -422,10 +429,6 @@
             } else {
                 init();
             }
-        }
-        function shuffleArrayPieces (pieces){
-            for(var j, x, i = pieces.length; i; j = parseInt(Math.random() * i), x = pieces[--i], pieces[i] = pieces[j], pieces[j] = x);
-            return pieces;
         }
 
     </script>
